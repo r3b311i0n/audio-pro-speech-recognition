@@ -1,0 +1,102 @@
+{
+  "expo": {
+    "name": "audio-pro-speech-recognition",
+    "slug": "audio-pro-speech-recognition",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "audioprospeechrecognition",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.r3b311i0n.audioprospeechrecognition",
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "NSSpeechRecognitionUsageDescription": "Allow ${PRODUCT_NAME} to use speech recognition",
+        "NSMicrophoneUsageDescription": "Allow ${PRODUCT_NAME} to use the microphone"
+      }
+    },
+    "android": {
+      "package": "com.r3b311i0n.audioprospeechrecognition",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow ${PRODUCT_NAME} to use the microphone",
+          "speechRecognitionPermission": "Allow ${PRODUCT_NAME} to use speech recognition",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox",
+            "com.google.android.tts"
+          ]
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 26,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35
+          }
+        }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "assets"
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0736b22c-56f9-4f63-a9ee-e512c78e34ea"
+      }
+    },
+    "owner": "r3b311i0n",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/0736b22c-56f9-4f63-a9ee-e512c78e34ea"
+    }
+  }
+}

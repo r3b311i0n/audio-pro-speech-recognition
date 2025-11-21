@@ -1,49 +1,57 @@
 # AGENTS
 
-## Overview
+## Setup commands
 
-- Agents coordinate speech-capture, inference, and playback pipelines.
-- Each agent runs independently but shares typed events via the app bus.
-- Production focus: low-latency streaming, glitch-free audio, explicit observability.
-- All agents run inside Expo/React Native contexts; backend services optional.
-- The `(tabs)/index` demo surface includes manual AudioPro playback and Expo Speech Recognition controls that emit live transcripts via `useSpeechRecognitionEvent('result', ...)` for quick validation without wiring extra agents.
+- Install dependencies: `npm install`
+- Start dev server: `npm start` (runs `npx expo start --dev-client`)
+- Run on Android: `npm run android`
+- Run on iOS: `npm run ios`
+- Run on web: `npm run web`
+- Lint: `npm run lint`
 
-## VoiceCaptureAgent
+## Project overview
 
-- Manages microphone permissions and hotword triggers.
-- Streams PCM chunks into the shared ring buffer; tags each chunk with timestamp + VAD flags.
-- Emits `capture:status` events for UI state (idle, arming, recording).
-- Hardened against backgrounding by halting acquisition once `AppState !== active`.
+- Expo/React Native app using Expo Router for navigation
+- Requires Expo Dev Client (custom dev client) for native modules (`react-native-audio-pro`, `expo-speech-recognition`)
+- TypeScript with strict mode enabled
+- Uses React 19.1.0 and React Native 0.81.5
 
-## TranscriptionAgent
+## Code style
 
-- Subscribes to the ring buffer; batches frames (configurable 320-960 samples).
-- Sends frames to the selected model provider (default: on-device whisper.cpp build).
-- Provides word-level timings + confidence and emits `transcript:update`.
-- Retries failed RPCs with exponential backoff; falls back to offline queueing when offline.
+- TypeScript strict mode (enforced in `tsconfig.json`)
+- ESLint with `eslint-config-expo`
+- Path aliases: `@/*` maps to project root
+- Follow Expo conventions for file structure
 
-## IntentRouterAgent
+## Development environment
 
-- Listens to `transcript:final` messages and runs lightweight intent classification.
-- Normalizes intents into the `IntentEnvelope` schema (`name`, `slots`, `confidence`).
-- Dispatches matched intents to automation hooks (e.g., prompt composer, shortcut runner).
-- Logs low-confidence intents for later tuning and A/B comparisons.
+- Metro bundler handles JavaScript/TypeScript bundling
+- Native modules require Expo Dev Client (not Expo Go)
+- Hot reload available during development
+- Check `app.json` for Expo configuration
 
-## PlaybackAgent
+## Testing
 
-- Receives `intent:tts` requests, fetches synthesized audio, and streams playback.
-- Crossfades with ongoing capture to avoid user-audible pops.
-- Publishes `playback:metrics` (latency, underruns) to the diagnostics view.
+- Run linting before committing: `npm run lint`
+- No test suite configured yet; add tests as needed
+- Manual testing: Use the demo surface at `(tabs)/index` for AudioPro playback and Speech Recognition validation
 
-## EvaluationAgent
+## File structure
 
-- Periodically samples agent telemetry and runs drift checks (WER delta, VAD accuracy).
-- Flags regressions to Sentry via `agent:alert` payloads with repro snippets.
-- Generates nightly CSV reports stored under `assets/telemetry`.
+- `app/` - Expo Router pages and layouts
+- `components/` - Reusable React components
+- `hooks/` - Custom React hooks
+- `constants/` - App constants and theme
+- `assets/` - Static assets (images, audio files)
 
-## Extending
+## Native modules
 
-- Implement new agents by conforming to `AgentLifecycle` (`start`, `stop`, `handleEvent`).
-- Register the agent inside `app/agents/index.ts` and expose its events in the `AgentBus`.
-- Prefer stateless logic; persist mutable data through shared stores or secure storage.
-- Document new agents in this file and update README usage examples accordingly.
+- `react-native-audio-pro` - Audio playback/recording
+- `expo-speech-recognition` - Speech recognition
+- Both require native builds; cannot test in Expo Go
+
+## Notes
+
+- The app demonstrates AudioPro resume bug reproduction (see README.md)
+- Uses `expo-router` for file-based routing
+- Audio assets stored in `assets/audio/`
